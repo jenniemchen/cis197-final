@@ -1,0 +1,16 @@
+.nav-link , .navbar-brand { 
+    color: #000000; 
+    cursor: pointer; 
+    font-family: Montserrat, regular;}
+
+.nav-link{ 
+    margin-right: 1em !important;}
+
+.nav-link:hover { 
+    color: #6495ED; }
+
+.navbar-collapse { 
+    justify-content: flex-end;}
+
+.navbar-toggler { 
+    background:#fff !important;}

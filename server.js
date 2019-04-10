@@ -13,7 +13,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/hw5-new')
 app.engine('html', require('ejs').__express);
 app.set('view engine', 'html');
 
-app.use('/static', express.static(path.join(__dirname, 'static')))
+app.use('/', express.static(path.join(__dirname, '')))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -27,30 +27,9 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 
-
 app.get('/', function (req, res, next) {
-  questions = Question.find({}, function (err, result) {
-    if (err) next(err)
-    res.render('index', { 
-      questions: result, 
-      user: req.session.user 
-    })
-  })
+  res.render('index')
 });
-
-
-app.post('/', function (req, res, next) {
-  var questionText = req.body.question;
-  var q = new Question({ questionText: questionText, author: req.session.user })
-  q.save(function (err, result) {
-    if (!err) {
-      res.redirect('/')
-    } else {
-      next(err)
-    }
-  })
-})
-
 
 app.use('/account', accountRouter)
 app.use('/api', apiRouter)

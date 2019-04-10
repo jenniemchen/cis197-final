@@ -1,0 +1,46 @@
+.nav-link , .navbar-brand {  
+    color: #000000; 
+    cursor: pointer; 
+    font-family: Montserrat, regular;}
+  
+.nav-link { 
+  margin-right: 1em !important;}
+  
+.nav-link:hover { 
+  color: #6495ED; }
+  
+.navbar-collapse { 
+  justify-content: flex-end;}
+  
+.navbar-toggler {  
+  background:#fff !important;}
+  
+html, body {
+  font-family: Montserrat, regular;
+  margin: 0;
+  width: 100%;}
+
+/*
+.form-control {
+  width: 100%;
+  border: 0;
+  background-color: #fff;
+  font-family: Montserrat, regular; }
+
+.form-control:focus {
+  border-color: #6495ED !important;
+  background-color: #fff;
+  box-shadow: 0 0 5px #6495ED !important;
+} */
+  
+.no-border {
+  border: 0;
+  box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+}
+
+.g-signin2 {
+  width: 100%;}
+      
+.g-signin2 > div {
+  margin: 0 auto;}
+  
