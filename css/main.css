@@ -1,16 +1,45 @@
-.nav-link , .navbar-brand { 
+html, body {
+    font-family: Lato-Light;
+    /*margin: 0;*/
+}
+
+.btn {
+    margin: 1em;
+    border-color: #000000;
+}
+
+.center {
+    text-align: center
+}
+
+.nav-link, .navbar-brand { 
     color: #000000; 
+    /*background-color: #000000;*/
+    background-color: #ffffff;
     cursor: pointer; 
-    font-family: Montserrat, regular;}
+    font-family: Lato-Light;
+}
+
+.navbar, .navbar-brand:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
 
 .nav-link{ 
-    margin-right: 1em !important;}
+    margin-right: 1em !important;
+    /*margin-bottom: 1px;*/
+}
 
+/* change for customizing active link, maybe change .nav-link:after?? for shift issue*/
 .nav-link:hover { 
-    color: #6495ED; }
+    color: #9c9c9c; 
+    /*border-bottom: 1px solid #ffffff;*/
+}
 
 .navbar-collapse { 
-    justify-content: flex-end;}
+    justify-content: flex-end;
+}
 
 .navbar-toggler { 
-    background:#fff !important;}
+    background: #000000 !important;
+}

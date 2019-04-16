@@ -2,45 +2,55 @@
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/login.css">
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="PLACEHOLDER_FOR_CLIENT_KEY.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/client.js?onload=load"></script>
   </head>
    <!-- navbar -->  
    <body>
    <nav class="navbar navbar-expand-lg fixed-top ">  
-      <!-- <a class="navbar-brand" href="#">Home</a>-->  
+      <a class="navbar-brand">APP NAME</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">  
       <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse " id="navbarSupportedContent">     
       <ul class="navbar-nav mr-4">
       <li class="nav-item">
-        <a class="nav-link" data-value="about" href="/">About</a>       </li>  
+        <a class="nav-link" data-value="about" href="/">ABOUT</a>       </li>  
       <li class="nav-item"> 
-        <a class="nav-link " data-value="login" href="#">Log in</a>       </li> 
-      </ul> 
+        <a class="nav-link " data-value="login" href="/account/login">LOG IN</a>       </li> 
       </div>
     </nav>
 
-    <!--<button onclick="signOut()">Log out</button>-->
-  
     <div class="row h-50 justify-content-center align-items-center">
       <form class = "form-horizontal">
         <div class="form-group">
           <label for="name">Name</label>
           <input type="text" class="form-control" id="name" placeholder="">
         </div>
-        <!--
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="text" class="form-control" id="password" placeholder="">
-        </div>
-        -->
       </form>
     </div>
-    
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+
+    <div class="container">
+      <div class="row">
+          <div class="col text-center">
+            <p class="center">Sign into 'app name'</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col text-center">
+              <div class="g-signin2" data-onsuccess="onSuccess" data-theme="light"></div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <button class="btn btn-default" onclick="signOut()">Log out</button>
+        </div>
+      </div>
+    </div>
+
     <script>
         // Render Google Sign-in button
         function renderButton() {
@@ -57,24 +67,25 @@
         
         // Sign-in success callback
         function onSuccess(googleUser) {
-            // Get the Google profile data (basic)
-            //var profile = googleUser.getBasicProfile();
-            
-            // Retrieve the Google account data
-            gapi.client.load('oauth2', 'v2', function () {
-                var request = gapi.client.oauth2.userinfo.get({
-                    'userId': 'me'
-                });
-                request.execute(function (resp) {
-                    // Display the user details
-                    var profileHTML = '<h3>Welcome '+resp.given_name+'! <a href="javascript:void(0);" onclick="signOut();">Sign out</a></h3>';
-                    profileHTML += '<img src="'+resp.picture+'"/><p><b>Google ID: </b>'+resp.id+'</p><p><b>Name: </b>'+resp.name+'</p><p><b>Email: </b>'+resp.email+'</p><p><b>Gender: </b>'+resp.gender+'</p><p><b>Locale: </b>'+resp.locale+'</p><p><b>Google Profile:</b> <a target="_blank" href="'+resp.link+'">click to view profile</a></p>';
-                    document.getElementsByClassName("userContent")[0].innerHTML = profileHTML;
-                    
-                    document.getElementById("gSignIn").style.display = "none";
-                    document.getElementsByClassName("userContent")[0].style.display = "block";
-                });
+          // Get the Google profile data (basic)
+          var profile = googleUser.getBasicProfile();
+          console.log(profile)
+          // Retrieve the Google account data
+          gapi.client.load('oauth2', 'v2', function () {
+            var request = gapi.client.oauth2.userinfo.get({
+              'userId': 'me'
             });
+          request.execute(function (resp) {
+            /*
+            // Display the user details
+            var profileHTML = '<h3>Welcome '+resp.given_name+'! <a href="javascript:void(0);" onclick="signOut();">Sign out</a></h3>';
+            profileHTML += '<img src="'+resp.picture+'"/><p><b>Google ID: </b>'+resp.id+'</p><p><b>Name: </b>'+resp.name+'</p><p><b>Email: </b>'+resp.email+'</p><p><b>Gender: </b>'+resp.gender+'</p><p><b>Locale: </b>'+resp.locale+'</p><p><b>Google Profile:</b> <a target="_blank" href="'+resp.link+'">click to view profile</a></p>';
+            document.getElementsByClassName("userContent")[0].innerHTML = profileHTML;
+                    
+            document.getElementById("gSignIn").style.display = "none";
+            document.getElementsByClassName("userContent")[0].style.display = "block";*/
+            });
+          });
         }
         
         // Sign-in failure callback
@@ -84,14 +95,16 @@
         
         // Sign out the user
         function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-                document.getElementsByClassName("userContent")[0].innerHTML = '';
-                document.getElementsByClassName("userContent")[0].style.display = "none";
-                document.getElementById("gSignIn").style.display = "block";
-            });
+          var auth2 = gapi.auth2.getAuthInstance();
+          auth2.signOut().then(function () {
+            /*
+            document.getElementsByClassName("userContent")[0].innerHTML = '';
+            document.getElementsByClassName("userContent")[0].style.display = "none";
+            document.getElementById("gSignIn").style.display = "block";
+            */
+          });
             
-            auth2.disconnect();
+          auth2.disconnect();
         }
     </script>
     </body>

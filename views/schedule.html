@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <script src="../static/scripts/lib/jquery.min.js"></script>
+    <script src='../fullcalendar/packages/core/main.min.js'></script>
+    <script src='../fullcalendar/packages/daygrid/main.min.js'></script>
+    <!--<script src="/static/scripts/main.js"></script>-->
+    <link href='../fullcalendar/packages/core/main.min.css' rel='stylesheet' />
+    <link href='../fullcalendar/packages/daygrid/main.min.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <link rel="stylesheet" type="text/css" href="../css/schedule.css">
+  </head>
+  <body>
+    <!-- navbar -->  
+    <nav class="navbar navbar-expand-lg fixed-top ">  
+    <a class="navbar-brand">App Name</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">  
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">     
+    <ul class="navbar-nav mr-4">
+    <li class="nav-item">
+      <a class="nav-link" data-value="about" href="#">ABOUT</a>       </li>  
+    <li class="nav-item"> 
+      <a class="nav-link " data-value="schedule" href="#">SCHEDULE</a>       </li> 
+    <li class="nav-item"> 
+    <a class="nav-link " data-value="profile" href="#">PROFILE</a>       </li> 
+    </ul> 
+    </div></nav>
+
+    <p class="center">''</p>
+    <p class="center">''</p>
+  
+    <div id='calendar'></div>
+
+
+</body>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        plugins: [ 'dayGrid' ]
+      });
+
+      calendar.render();
+    });
+
+  </script>
+</html>
