@@ -4,8 +4,9 @@ html, body {
 }
 
 .btn {
-    margin: 1em;
+    /*margin: 1em;*/
     border-color: #000000;
+    background-color: #ffffff;
 }
 
 .center {
@@ -25,6 +26,10 @@ html, body {
     color: #000000;
 }
 
+.nav-container {
+    padding-bottom: 20;
+}
+
 .nav-link{ 
     margin-right: 1em !important;
     /*margin-bottom: 1px;*/
@@ -42,4 +47,16 @@ html, body {
 
 .navbar-toggler { 
     background: #000000 !important;
+}
+
+.input-group {
+    width: 50%;
+}
+
+.list-group {
+    width: 50%;
+}
+
+.alert {
+    width: 50%;
 }

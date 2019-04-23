@@ -1,0 +1,136 @@
+<html>
+
+<head>
+  <script src="../static/scripts/lib/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"
+    integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/main.css">
+</head>
+
+<body>
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top ">
+    <a class="navbar-brand">App Name</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+      <ul class="navbar-nav mr-4">
+        <li class="nav-item">
+          <a class="nav-link " data-value="schedule" href="/schedule">SCHEDULE</a> </li>
+        <li class="nav-item">
+          <a class="nav-link " data-value="profile" href="/profile">PROFILE</a> </li>
+        <li class="nav-item">
+          <a class="nav-link " data-value="friends" href="#">FRIENDS</a> </li>
+        <li class="nav-item">
+          <a class="nav-link " data-value="logout" href="#" onclick="signOut()">LOG OUT</a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <p class="center">''</p>
+  <p class="center">''</p>
+  <div class="container" id="wrapper">
+    <div class="row">
+      <div class="col text-center">
+        <p>FRIEND REQUESTS</p>
+        <ul id=requests class="list-group mx-auto justify-content-center">
+          <% var count = 0%>
+          <% from.forEach(function(f) { %>
+          <% count = count + 1%>
+          <li class='list-group-item d-flex justify-content-between align-items-center' id="from"><%= f.from %>
+            <button class='btn btn-default fas fa-trash-alt' type="button" onclick="acceptRequest()">ACCEPT</button>
+          </li>
+          <% }) %>
+          <%if (count === 0) { %>
+          <li class='list-group-item d-flex justify-content-between align-items-center'> No requests</li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-center">
+        <p></p>
+        <p></p>
+        <p>SEARCH FOR USERS</p>
+        <div class="row justify-content-center align-items-center">
+          <div class="input-group">
+            <input placeholder='search by email' id='searchEmail' type="text" class="form-control">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="sendRequest()">SEND REQUEST</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center align-items-center">
+        <p> </p>
+        <div class="alert alert-dismissible fade" role="alert" id="alert_text">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="closeAlert()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    <!--<p> </p>-->
+
+  <script>
+
+    function signOut() {
+      $.get('/account/logout', function (data, status) {
+        window.location.href = ('/');
+      });
+    }
+
+    function closeAlert() {
+      $('.alert').removeClass('show');
+      if ($('.alert').hasClass('alert-warning')) {
+        ($('.alert').removeClass('alert-warning'))
+      }
+      if ($('.alert').hasClass('alert-success')) {
+        ($('.alert').removeClass('alert-success'))
+      }
+    }
+
+    function sendRequest() {
+      //$('#txt_name').val()
+      const email = $('#searchEmail').val();
+      //console.log(email)
+      const base = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\" onclick=\"closeAlert()\">" +
+            "<span aria-hidden=\"true\">&times;</span> </button>";
+      $.post('/friends/request', { to: email }, function (data, status) {
+        switch(data) {
+          case 'ALREADY_FRIENDS':
+            $('.alert').addClass('show alert-warning');
+            document.getElementById('alert_text').innerHTML = 'You are already friends!' + base;
+            break
+          case 'SUCCESS':
+            $('.alert').addClass('show alert-success');
+            document.getElementById('alert_text').innerHTML = 'Friend request sent!' + base;
+            break;
+          case 'NOT_REGISTERED':
+            $('.alert').addClass('show alert-warning');
+            document.getElementById('alert_text').innerHTML = 'Oh no! They are not registered!' + base;
+            break
+        }
+        console.log(data)
+        console.log(status);
+      });
+    }
+
+    function acceptRequest() {
+      console.log('hit accept request')
+      let from = $('#from').text()
+      from = from.substr(0,from.indexOf('\n'));
+      console.log(from)
+      //console.log("FROM: " + from)
+      $.post('/friends/accept', { from: from }, function (data, status) {
+        console.log(status);
+      });
+    }
+
+  </script>
+</body>
+
+</html>

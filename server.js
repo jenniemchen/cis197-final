@@ -3,12 +3,15 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cookieSession = require('cookie-session');
 var mongoose = require('mongoose');
-var isAuthenticated = require('./middlewares/isAuthenticated.js');
-var Question = require('./models/question.js');
 var accountRouter = require('./routes/account.js');
-var apiRouter = require('./routes/api.js');
+var scheduleRouter = require('./routes/schedule.js');
+var profileRouter = require('./routes/profile.js')
+var friendRouter = require('./routes/friends.js');
 var app = express();
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/hw5-new')
+var axios = require('axios');
+var User = require('./models/user.js')
+var expressSession = require('express-session');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/final_proj')
 
 app.engine('html', require('ejs').__express);
 app.set('view engine', 'html');
@@ -31,12 +34,58 @@ app.get('/', function (req, res, next) {
   res.render('index')
 });
 
-app.use('/account', accountRouter)
-app.use('/api', apiRouter)
+app.get('/google', function (req, res) {
+  console.log(req.query);
+  const code = req.query.code;
+  axios.post('https://www.googleapis.com/oauth2/v3/token', {
+    client_id: '410882968128-6lih5vvt48bpsgb0omnpmo0h54v3jnhv.apps.googleusercontent.com',
+    
+    grant_type: 'authorization_code',
+    redirect_uri: 'https://a0813af8.ngrok.io/google',
+    code
+  }).then(resp => {
+    console.log(resp.data)
+    const access_token = resp.data.access_token;
+    const refresh_token = resp.data.refresh_token;
+    axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?alt=json&access_token=${access_token}`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`
+      }
+    })
+      .then(resp => {
+        User.findOne({ email: resp.data.email }, function (err, result) {
+          req.session.user = resp.data.email;
+          if (!err && result != null) {
+            console.log('user exists')
+            res.redirect('/schedule')
+            //new user not yet in db
+          } else {
+            console.log('user does not exist')
+            const u = new User({
+              name: resp.data.name,
+              email: resp.data.email,
+              access_token,
+              refresh_token, 
+              friends: []
+            });
+            u.save()
+              .then(() => {
+                res.redirect('/schedule');
+              })
+          }
+        })
+      })
+  }).catch(console.log)
+})
 
-// TODO: Mount api routes at '/api' prefix
 
-// don't put any routes below here!
+// mount routes below 
+app.use('/account', accountRouter);
+app.use('/schedule', scheduleRouter);
+app.use('/profile', profileRouter);
+app.use('/friends', friendRouter);
+
+// launch app at localhost 
 app.use(function (err, req, res, next) {
   return res.send('ERROR :  ' + err.message)
 })

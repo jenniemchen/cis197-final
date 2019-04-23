@@ -1,26 +1,81 @@
 <html>
-  <head>
-    <script src="/static/scripts/lib/jquery.min.js"></script>
-    <!--<script src="/static/scripts/main.js"></script>-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/main.css">
-  </head>
-  <body>
-    <!-- navbar -->  
-    <nav class="navbar navbar-expand-lg fixed-top ">  
-    <!-- <a class="navbar-brand" href="#">Home</a>-->  
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">  
-    <span class="navbar-toggler-icon"></span>
+
+<head>
+  <script src="../static/scripts/lib/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"
+    integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/main.css">
+</head>
+
+<body>
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top ">
+    <a class="navbar-brand">App Name</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse " id="navbarSupportedContent">     
-    <ul class="navbar-nav mr-4">
-    <li class="nav-item">
-      <a class="nav-link" data-value="about" href="#">About</a>       </li>  
-    <li class="nav-item"> 
-      <a class="nav-link " data-value="login" href="#">Schedule</a>       </li> 
-    <li class="nav-item"> 
-    <a class="nav-link " data-value="login" href="#">Profile</a>       </li> 
-    </ul> 
-    </div></nav>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+      <ul class="navbar-nav mr-4">
+        <li class="nav-item">
+          <a class="nav-link " data-value="schedule" href="/schedule">SCHEDULE</a> </li>
+        <li class="nav-item">
+          <a class="nav-link " data-value="profile" href="#">PROFILE</a> </li>
+        <li class="nav-item">
+          <a class="nav-link " data-value="friends" href="/friends">FRIENDS</a> </li>
+        <li class="nav-item">
+          <a class="nav-link " data-value="logout" href="#" onclick="signOut()">LOG OUT</a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <p class="center">''</p>
+  <p class="center">''</p>
+  <div class="container">
+    <div class="row">
+      <div class="col text-center">
+        <img src="../img/default_icon.png" class="rounded-circle">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-center">
+        <p></p>
+        <p style="font-family:Lato-Bold"><%= name %> <br> <%= email %></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-center">
+        <p></p>
+        <p>FRIENDS</p>
+        <ul id=friends class="list-group mx-auto justify-content-center">
+          <!--Add 'active' class to highlight blue-->
+          <!--query mongodb for friends and put into list-->
+          <% var count = 0%>
+          <% if (typeof friends == 'object') { %>
+          <% friends.forEach(function(f) { %>
+            <% count += 1 %>
+          <li class='list-group-item'><%= f %></li>
+          <% }) 
+          } %>
+          <% if (count === 0) { %>
+            <li class='list-group-item'>None</li>
+          <% } %> 
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+    function signOut() {
+      $.get('/account/logout', function (data, status) {
+        window.location.href = ('/');
+      });
+    }
+
+  </script>
 </body>
+
 </html>

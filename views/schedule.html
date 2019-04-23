@@ -3,7 +3,7 @@
     <script src="../static/scripts/lib/jquery.min.js"></script>
     <script src='../fullcalendar/packages/core/main.min.js'></script>
     <script src='../fullcalendar/packages/daygrid/main.min.js'></script>
-    <!--<script src="/static/scripts/main.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
     <link href='../fullcalendar/packages/core/main.min.css' rel='stylesheet' />
     <link href='../fullcalendar/packages/daygrid/main.min.css' rel='stylesheet' />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -20,30 +20,67 @@
     <div class="collapse navbar-collapse " id="navbarSupportedContent">     
     <ul class="navbar-nav mr-4">
     <li class="nav-item"> 
-      <a class="nav-link " data-value="schedule" href="#">SCHEDULE</a>       </li> 
+      <a class="nav-link " data-value="schedule" href="/schedule">SCHEDULE</a>       </li> 
     <li class="nav-item"> 
-    <a class="nav-link " data-value="profile" href="#">PROFILE</a>       </li> 
+    <a class="nav-link " data-value="profile" href="/profile">PROFILE</a>       </li> 
+    <li class="nav-item">
+        <a class="nav-link " data-value="friends" href="/friends">FRIENDS</a> </li>
+    <li class="nav-item"> 
+        <a class="nav-link " data-value="logout" href="#" onclick="signOut()">LOG OUT</a>       </li> 
     </ul> 
     </div></nav>
 
     <p class="center">''</p>
     <p class="center">''</p>
   
-    <div id='calendar'></div>
-
-
-</body>
+    <button id="api-call" onclick="getCalendars()">API CALL</button>
+   <div id='calendar'  style="width: 80%; display: inline-block;"></div>
+  
 <script>
 
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
 
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        plugins: [ 'dayGrid' ]
-      });
-
-      calendar.render();
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      plugins: [ 'dayGrid' ], 
+      aspectRatio: 1.35
     });
 
+    calendar.render();
+  });
+
+  // Sign out the user
+  function signOut() {
+    //var auth2 = gapi.auth2.getAuthInstance();
+    //auth2.signOut().then(function () {
+    $.get('/account/logout', function(data, status) {
+      window.location.href = ('/');
+      //console.log("Data: " + data + "\nStatus: " + status);
+    });
+    //});
+    //auth2.disconnect();
+  }
+
+  /*
+  function onLoad() {
+    gapi.load('auth2', function() {
+      gapi.auth2.init();
+    });
+  }*/
+
+  function getCalendars() {
+    gapi.client.calendar.events.list({
+          'calendarId': 'primary',
+          'timeMin': (new Date()).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'maxResults': 10,
+          'orderBy': 'startTime'
+        }).then(function(response) {
+          console.log(response);
+        })
+  }
+
   </script>
+  </body>
 </html>
