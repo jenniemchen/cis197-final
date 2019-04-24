@@ -47,6 +47,7 @@ app.get('/google', function (req, res) {
     console.log(resp.data)
     const access_token = resp.data.access_token;
     const refresh_token = resp.data.refresh_token;
+    console.log("REFRESH_TOKEN: " + refresh_token);
     axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?alt=json&access_token=${access_token}`, {
       headers: {
         Authorization: `Bearer ${access_token}`
@@ -57,7 +58,10 @@ app.get('/google', function (req, res) {
           req.session.user = resp.data.email;
           if (!err && result != null) {
             console.log('user exists')
-            res.redirect('/schedule')
+            // update access token
+            User.update({email: resp.data.email}, {"$set": {access_token: access_token}}, function(err, result) {
+              res.redirect('/schedule')
+            })
             //new user not yet in db
           } else {
             console.log('user does not exist')
