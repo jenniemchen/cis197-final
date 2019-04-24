@@ -69,7 +69,8 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <ul id=members class="list-group mx-auto justify-content-center"><ul>
+        <ul id=members class="list-group mx-auto justify-content-center">
+          <ul>
       </div>
     </div>
     <div class="row">
@@ -87,6 +88,7 @@
     let startDate = "";
     let endDate = "";
     let members = new Array();
+    let added = [];
 
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
@@ -111,10 +113,10 @@
 
     function findOptions() {
       console.log(members + startDate + endDate)
-      $.post('/schedule/options', { 
-        members: members, 
-        startDate: startDate, 
-        endDate: endDate 
+      $.post('/schedule/options', {
+        members: members,
+        startDate: startDate,
+        endDate: endDate
       }, function (data, status) {
         //console.log(status)
       });
@@ -122,38 +124,42 @@
 
     function addToMeeting() {
       const base = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\" onclick=\"closeAlert()\">" +
-          "<span aria-hidden=\"true\">&times;</span> </button>";
+        "<span aria-hidden=\"true\">&times;</span> </button>";
       const email = $('#searchEmail').val();
       $.post('/schedule/addFriend', { friend: email }, function (data, status) {
-        switch (data) {
-          case 'INVALID':
-            $('.alert').addClass('show alert-warning');
-            document.getElementById('alert_text').innerHTML = 'Invalid user!' + base;
-            break
-          case 'VALID':
-            $('#members').append('<li class=\'list-group-item\'>' + email + '</li>');
-            //TO DO:check that members does not already contain email
-            members.push(email);
-            break;
-          case 'NOT_FRIENDS':
-            $('.alert').addClass('show alert-warning');
-            document.getElementById('alert_text').innerHTML = 'Oh no! You are not yet friends!' + base;
-            break
+        if (added.includes(email)) {
+          $('.alert').addClass('show alert-warning');
+          document.getElementById('alert_text').innerHTML = 'You already added them!' + base;
+        } else {
+          switch (data) {
+            case 'INVALID':
+              $('.alert').addClass('show alert-warning');
+              document.getElementById('alert_text').innerHTML = 'Invalid user!' + base;
+              break
+            case 'VALID':
+              $('#members').append('<li class=\'list-group-item\'>' + email + '</li>');
+              added.push(email);
+              //TO DO:check that members does not already contain email
+              members.push(email);
+              break;
+            case 'NOT_FRIENDS':
+              $('.alert').addClass('show alert-warning');
+              document.getElementById('alert_text').innerHTML = 'Oh no! You are not yet friends!' + base;
+              break
+          }
         }
-        console.log(data)
-        console.log(status);
       });
     }
 
     function closeAlert() {
-        $('.alert').removeClass('show');
-        if ($('.alert').hasClass('alert-warning')) {
-          ($('.alert').removeClass('alert-warning'))
-        }
-        if ($('.alert').hasClass('alert-success')) {
-          ($('.alert').removeClass('alert-success'))
-        }
+      $('.alert').removeClass('show');
+      if ($('.alert').hasClass('alert-warning')) {
+        ($('.alert').removeClass('alert-warning'))
       }
+      if ($('.alert').hasClass('alert-success')) {
+        ($('.alert').removeClass('alert-success'))
+      }
+    }
 
     // Sign out the user
     function signOut() {
