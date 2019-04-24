@@ -9,7 +9,7 @@ router.get('/', isAuthenticated, function (req, res) {
 })
 
 router.post('/options', isAuthenticated, function (req, res) {
-  const startDate = req.body.startDate;
+  let startDate = req.body.startDate;
   const endDate = req.body.endDate;
   let members = [];
 
@@ -135,6 +135,22 @@ router.post('/options', isAuthenticated, function (req, res) {
                 for (let i = 0; i < ans.length; i++) {
                   console.log(ans[i])
                 }
+                // find the free times by pulling out the busy times (startDate, endDate)
+                let freeTimes = [];
+                for (let i = 0; i < ans.length; i++) {
+                  let currStart = ans[i].start;
+                  let currEnd = ans[i].end;
+                  if (startDate < currStart) {
+                    //console.log("start: " + startDate + " end: " + currStart);
+                    freeTimes.push({start: startDate, end: currStart});
+                    startDate = currEnd;
+                  }
+                  if (i === ans.length - 1) {
+                    //console.log("start: " + currEnd + " end: " + endDate);
+                    freeTimes.push({start: currEnd, end: endDate})
+                  }
+                }
+                res.send(freeTimes);
               }
             }).catch(console.log)
         } else {
