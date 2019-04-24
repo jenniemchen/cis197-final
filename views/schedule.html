@@ -6,6 +6,7 @@
   <script src='../fullcalendar/packages/daygrid/main.min.js'></script>
   <script src='../fullcalendar/packages/timegrid/main.min.js'></script>
   <script src='../fullcalendar/packages/interaction/main.min.js'></script>
+  <script src='../fullcalendar/packages/list/main.min.js'></script>
   <script src='../fullcalendar/packages/moment/main.min.js'></script>
   <link href='../fullcalendar/packages/core/main.min.css' rel='stylesheet' />
   <link href='../fullcalendar/packages/daygrid/main.min.css' rel='stylesheet' />
@@ -86,6 +87,7 @@
   <div class="row">
     <p></p>
   </div>
+
   <script>
     let startDate = "";
     let endDate = "";
@@ -96,11 +98,11 @@
       var calendarEl = document.getElementById('calendar');
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
-        plugins: ['interaction', 'dayGrid', 'timeGrid'],
+        plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
         header: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         selectable: true,
         editable: true,
@@ -123,7 +125,7 @@
       }, function (data, status) {
         console.log('reaches')
         console.log(data)
-        
+
         let events = [];
         for (let i = 0; i < data.length; i++) {
           let start = data[i].start;
@@ -131,18 +133,18 @@
             start += 'T04:00:00Z'
           }
           let end = data[i].end;
-          events.push({start: start, end: end, allDay: false})
+          events.push({ start: start, end: end, allDay: false })
         }
         console.log(events)
         //$("#calendar").empty()
         document.getElementById('calendar').innerHTML = "<div id=\'calendar\' style=\"width: 50%; display: inline-block;\"></div>";
         var calendarEl = document.getElementById('calendar')
         var calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: ['interaction', 'dayGrid', 'timeGrid'],
+          plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
           header: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
           },
           selectable: true,
           editable: true,

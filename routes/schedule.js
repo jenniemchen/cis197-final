@@ -108,8 +108,8 @@ router.post('/options', isAuthenticated, function (req, res) {
                           end = second[idx2].end;
                         }
                         idx2++;
-                      } 
-                      allBusy.push({start: minStart, end: end})
+                      }
+                      allBusy.push({ start: minStart, end: end })
                       for (let j = idx2; j < second.length; j++) {
                         allBusy.push(second[j]);
                       }
@@ -119,8 +119,8 @@ router.post('/options', isAuthenticated, function (req, res) {
                           end = first[idx1].end;
                         }
                         idx1++;
-                      } 
-                      allBusy.push({start: minStart, end: end})
+                      }
+                      allBusy.push({ start: minStart, end: end })
                       for (let j = idx1; j < first.length; j++) {
                         allBusy.push(first[j]);
                       }
@@ -128,7 +128,7 @@ router.post('/options', isAuthenticated, function (req, res) {
                   }
                   first = allBusy;
                   if (i === busyTimes.length - 1) {
-                    ans = allBusy; 
+                    ans = allBusy;
                   }
                 }
                 console.log("RESULT: " + ans);
@@ -142,12 +142,12 @@ router.post('/options', isAuthenticated, function (req, res) {
                   let currEnd = ans[i].end;
                   if (startDate < currStart) {
                     //console.log("start: " + startDate + " end: " + currStart);
-                    freeTimes.push({start: startDate, end: currStart});
+                    freeTimes.push({ start: startDate, end: currStart });
                     startDate = currEnd;
                   }
                   if (i === ans.length - 1) {
                     //console.log("start: " + currEnd + " end: " + endDate);
-                    freeTimes.push({start: currEnd, end: endDate})
+                    freeTimes.push({ start: currEnd, end: endDate })
                   }
                 }
                 res.send(freeTimes);
