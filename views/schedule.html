@@ -6,8 +6,7 @@
   <script src='../fullcalendar/packages/daygrid/main.min.js'></script>
   <script src='../fullcalendar/packages/timegrid/main.min.js'></script>
   <script src='../fullcalendar/packages/interaction/main.min.js'></script>
-  <script src="https://code.jquery.com/jquery-3.4.0.min.js"
-    integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+  <script src='../fullcalendar/packages/moment/main.min.js'></script>
   <link href='../fullcalendar/packages/core/main.min.css' rel='stylesheet' />
   <link href='../fullcalendar/packages/daygrid/main.min.css' rel='stylesheet' />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -40,14 +39,12 @@
   <p class="center">''</p>
 
   <div class="container">
-    <div class="row">
-      <div class="col text-center">
-        <div id='calendar' style="width: 50%; display: inline-block;"></div>
-      </div>
-    </div>
+    <p></p>
     <div class="row">
       <div class="col text-center">
         <p></p>
+        <p>Find mutually available times to hang out with friends! First, add friends to the meeting, and then select
+          dates.</p>
         <p></p>
         <p>ADD FRIENDS</p>
         <div class="row justify-content-center align-items-center">
@@ -60,6 +57,12 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col text-center">
+        <ul id=members class="list-group mx-auto justify-content-center">
+          <ul>
+      </div>
+    </div>
     <div class="row justify-content-center align-items-center">
       <div class="alert alert-dismissible fade" role="alert" id="alert_text">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="closeAlert()">
@@ -69,8 +72,7 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <ul id=members class="list-group mx-auto justify-content-center">
-          <ul>
+        <div id='calendar' style="width: 50%; display: inline-block;"></div>
       </div>
     </div>
     <div class="row">
@@ -101,6 +103,7 @@
           right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         selectable: true,
+        editable: true,
         select: function (info) {
           //alert('selected ' + info.startStr + ' to ' + info.endStr);
           startDate = info.startStr;
@@ -112,13 +115,46 @@
     });
 
     function findOptions() {
-      console.log(members + startDate + endDate)
+      //console.log(members + startDate + endDate)
       $.post('/schedule/options', {
         members: members,
         startDate: startDate,
         endDate: endDate
       }, function (data, status) {
-        //console.log(status)
+        console.log('reaches')
+        console.log(data)
+        
+        let events = [];
+        for (let i = 0; i < data.length; i++) {
+          let start = data[i].start;
+          if (start.length < 12) {
+            start += 'T04:00:00Z'
+          }
+          let end = data[i].end;
+          events.push({start: start, end: end, allDay: false})
+        }
+        console.log(events)
+        //$("#calendar").empty()
+        document.getElementById('calendar').innerHTML = "<div id=\'calendar\' style=\"width: 50%; display: inline-block;\"></div>";
+        var calendarEl = document.getElementById('calendar')
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: ['interaction', 'dayGrid', 'timeGrid'],
+          header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          selectable: true,
+          editable: true,
+          select: function (info) {
+            //alert('selected ' + info.startStr + ' to ' + info.endStr);
+            startDate = info.startStr;
+            endDate = info.endStr;
+          },
+          events: events
+        });
+        calendar.render()
+
       });
     }
 
