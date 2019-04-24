@@ -11,7 +11,7 @@
 <body>
   <!-- navbar -->
   <nav class="navbar navbar-expand-lg fixed-top ">
-    <a class="navbar-brand">App Name</a>
+    <a class="navbar-brand">timetable</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -66,71 +66,75 @@
       </div>
     </div>
     <div class="row justify-content-center align-items-center">
-        <p> </p>
-        <div class="alert alert-dismissible fade" role="alert" id="alert_text">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="closeAlert()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+      <p> </p>
+      <div class="alert alert-dismissible fade" role="alert" id="alert_text">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="closeAlert()">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+    </div>
     <!--<p> </p>-->
 
-  <script>
+    <script>
 
-    function signOut() {
-      $.get('/account/logout', function (data, status) {
-        window.location.href = ('/');
-      });
-    }
-
-    function closeAlert() {
-      $('.alert').removeClass('show');
-      if ($('.alert').hasClass('alert-warning')) {
-        ($('.alert').removeClass('alert-warning'))
+      function signOut() {
+        $.get('/account/logout', function (data, status) {
+          window.location.href = ('/');
+        });
       }
-      if ($('.alert').hasClass('alert-success')) {
-        ($('.alert').removeClass('alert-success'))
-      }
-    }
 
-    function sendRequest() {
-      //$('#txt_name').val()
-      const email = $('#searchEmail').val();
-      //console.log(email)
-      const base = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\" onclick=\"closeAlert()\">" +
-            "<span aria-hidden=\"true\">&times;</span> </button>";
-      $.post('/friends/request', { to: email }, function (data, status) {
-        switch(data) {
-          case 'ALREADY_FRIENDS':
-            $('.alert').addClass('show alert-warning');
-            document.getElementById('alert_text').innerHTML = 'You are already friends!' + base;
-            break
-          case 'SUCCESS':
-            $('.alert').addClass('show alert-success');
-            document.getElementById('alert_text').innerHTML = 'Friend request sent!' + base;
-            break;
-          case 'NOT_REGISTERED':
-            $('.alert').addClass('show alert-warning');
-            document.getElementById('alert_text').innerHTML = 'Oh no! They are not registered!' + base;
-            break
+      function closeAlert() {
+        $('.alert').removeClass('show');
+        if ($('.alert').hasClass('alert-warning')) {
+          ($('.alert').removeClass('alert-warning'))
         }
-        console.log(data)
-        console.log(status);
-      });
-    }
+        if ($('.alert').hasClass('alert-success')) {
+          ($('.alert').removeClass('alert-success'))
+        }
+      }
 
-    function acceptRequest() {
-      console.log('hit accept request')
-      let from = $('#from').text()
-      from = from.substr(0,from.indexOf('\n'));
-      console.log(from)
-      //console.log("FROM: " + from)
-      $.post('/friends/accept', { from: from }, function (data, status) {
-        console.log(status);
-      });
-    }
+      function sendRequest() {
+        //$('#txt_name').val()
+        const email = $('#searchEmail').val();
+        //console.log(email)
+        const base = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\" onclick=\"closeAlert()\">" +
+          "<span aria-hidden=\"true\">&times;</span> </button>";
+        $.post('/friends/request', { to: email }, function (data, status) {
+          switch (data) {
+            case 'ALREADY_FRIENDS':
+              $('.alert').addClass('show alert-warning');
+              document.getElementById('alert_text').innerHTML = 'You are already friends!' + base;
+              break
+            case 'SUCCESS':
+              $('.alert').addClass('show alert-success');
+              document.getElementById('alert_text').innerHTML = 'Friend request sent!' + base;
+              break;
+            case 'NOT_REGISTERED':
+              $('.alert').addClass('show alert-warning');
+              document.getElementById('alert_text').innerHTML = 'Oh no! They are not registered!' + base;
+              break
+            case 'REQUEST_EXISTS':
+              $('.alert').addClass('show alert-warning');
+              document.getElementById('alert_text').innerHTML = 'Friend request already sent!' + base;
+              break
+          }
+          console.log(data)
+          console.log(status);
+        });
+      }
 
-  </script>
+      function acceptRequest() {
+        console.log('hit accept request')
+        let from = $('#from').text()
+        from = from.substr(0, from.indexOf('\n'));
+        console.log(from)
+        //console.log("FROM: " + from)
+        $.post('/friends/accept', { from: from }, function (data, status) {
+          console.log(status);
+        });
+      }
+
+    </script>
 </body>
 
 </html>

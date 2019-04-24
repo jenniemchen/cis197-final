@@ -29,6 +29,7 @@ router.post('/request', isAuthenticated, function (req, res) {
             //check that a friend request doesn't already exist
             FriendRequest.find({ to: req.body.to, from: req.session.user }, function (err, result) {
               if (result.length > 0) {
+                res.send('REQUEST_EXISTS')
                 console.log('request exists');
               } else {
                 //create FriendRequest object and add to collection
